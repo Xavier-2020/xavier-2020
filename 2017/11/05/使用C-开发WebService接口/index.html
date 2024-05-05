@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="由于工作需求，不得已要做一些业务接口，使用C#语言和Visual Studio2010开发完成。一开始真的完全不懂如何下手，慢慢的从网上查找一些这方面的资料，一步步地到现在可以自己独立完成接口的开发，其中也是经历了挺多挫折的。现在希望能够分享一下这方面的东西，也是为以后做个笔记吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用C#开发WebService接口">
+<meta property="og:url" content="http://example.com/2017/11/05/%E4%BD%BF%E7%94%A8C-%E5%BC%80%E5%8F%91WebService%E6%8E%A5%E5%8F%A3/index.html">
+<meta property="og:site_name" content="swordsTnT&#39;s Blog">
+<meta property="og:description" content="由于工作需求，不得已要做一些业务接口，使用C#语言和Visual Studio2010开发完成。一开始真的完全不懂如何下手，慢慢的从网上查找一些这方面的资料，一步步地到现在可以自己独立完成接口的开发，其中也是经历了挺多挫折的。现在希望能够分享一下这方面的东西，也是为以后做个笔记吧。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2017-11-05T09:48:48.000Z">
+<meta property="article:modified_time" content="2018-06-07T13:27:52.684Z">
+<meta property="article:author" content="swordsTnT">
+<meta property="article:tag" content="C#">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2017/11/05/%E4%BD%BF%E7%94%A8C-%E5%BC%80%E5%8F%91WebService%E6%8E%A5%E5%8F%A3/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>使用C#开发WebService接口 | swordsTnT's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">swordsTnT's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2017/11/05/%E4%BD%BF%E7%94%A8C-%E5%BC%80%E5%8F%91WebService%E6%8E%A5%E5%8F%A3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+      <meta itemprop="name" content="swordsTnT">
+      <meta itemprop="description" content="努力是为了 站在万人中央 成为别人的光">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="swordsTnT's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          使用C#开发WebService接口
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2017-11-05 17:48:48" itemprop="dateCreated datePublished" datetime="2017-11-05T17:48:48+08:00">2017-11-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2018-06-07 21:27:52" itemprop="dateModified" datetime="2018-06-07T21:27:52+08:00">2018-06-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webService/" itemprop="url" rel="index"><span itemprop="name">webService</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>由于工作需求，不得已要做一些业务接口，使用C#语言和Visual Studio2010开发完成。一开始真的完全不懂如何下手，慢慢的从网上查找一些这方面的资料，一步步地到现在可以自己独立完成接口的开发，其中也是经历了挺多挫折的。现在希望能够分享一下这方面的东西，也是为以后做个笔记吧。</p>
+<span id="more"></span>
+<h3 id="Step1-创建WebService项目"><a href="#Step1-创建WebService项目" class="headerlink" title="Step1.创建WebService项目"></a>Step1.创建WebService项目</h3><p><strong>1.</strong> 首先我们打开Visual Studio2010开发工具，点击导航栏—文件—新建项目，选择Visual C#–Web，选择ASP.NET空Web应用程序，项目名称可以随意定，点击确定。</p>
+<p><strong>2.</strong> 打开解决方案管理器，找到我们刚才创建的那个项目，右键—添加新建项，选择Web服务，名称也是由自己定，确定后就完成了项目的创建。</p>
+<h4 id="代码解析"><a href="#代码解析" class="headerlink" title="代码解析"></a>代码解析</h4><p>我们双击打开后缀名为.asmx的文件，看到如下代码：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.Collections.Generic;</span><br><span class="line"><span class="keyword">using</span> System.Linq;</span><br><span class="line"><span class="keyword">using</span> System.Web;</span><br><span class="line"><span class="keyword">using</span> System.Web.Services;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title">WebApplication2</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> WebService1 的摘要说明</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    [<span class="meta">WebService(Namespace = <span class="string">&quot;http://tempuri.org/&quot;</span>)</span>]</span><br><span class="line">    [<span class="meta">WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)</span>]</span><br><span class="line">    [<span class="meta">System.ComponentModel.ToolboxItem(false)</span>]</span><br><span class="line">    <span class="comment">// 若要允许使用 ASP.NET AJAX 从脚本中调用此 Web 服务，请取消对下行的注释。</span></span><br><span class="line">    <span class="comment">// [System.Web.Script.Services.ScriptService]</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title">WebService1</span> : <span class="title">System.Web.Services.WebService</span></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">        [<span class="meta">WebMethod</span>]</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="built_in">string</span> <span class="title">HelloWorld</span>()</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;Hello World&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>这是开发工具自动帮我们生成的初始代码的demo，我们主要关注的是HelloWord这个方法，如果一个方法上面带有[WebMethod]，则说明此方法是对外公开，可供外部调用的，说白了，这就是我们的接口，如果我们想对该方面写注释要怎么做呢？只需要把[WebMethod]改为[WebMethod(Description&#x3D;”这是外部调用的接口”)]，这样里面的中文说明在我们启动项目的时候就可以看到了。</p>
+<h3 id="Step2-项目代码的结构"><a href="#Step2-项目代码的结构" class="headerlink" title="Step2.项目代码的结构"></a>Step2.项目代码的结构</h3><p>上面我们已经创建好了项目，下面根据业务开始设计代码的结构，一个好的结构可以让我们更好地维护项目。现在以最近做的一个项目为例子，只是我自己设计的，可以根据自己的实际情况设计结构，接口的传入数据、返回数据都为xml格式。</p>
+<p>我先讲解我的接口业务，涉及到查询数据、新增记录等，例如我们常见的 <strong>挂号</strong>，我就以挂号接口作为一个例子讲解实际业务。外部调用接口，传入必需的挂号相关信息，如订单号、号别、时段、挂号人信息、支付金额等，而我们的接口需要将这些传入的数据作为依据，查找是否存在对应的号源，如果信息无误，则完成挂号的操作，并且返回相应的订单信息给接口调用者。</p>
+<p>那么我们确定好接口的传入参数是xml格式的字符串，返回的数据也是xml格式的字符串，如果要对这些数据进行操作，最好的办法就是把xml格式的字符串转化为类，使用一个泛型类将其序列化类，确定好数据的处理，下面我们开始设计结构。</p>
+<p>下面是我设计的代码结构：</p>
+<p>TJYD.Helper ——–存放工具类，例如我们刚才提到的序列化类</p>
+<p>application ——–创建的项目</p>
+<p>appliaction.Business   ——-数据处理类，主要完成入参和出参的数据处理</p>
+<p>application.Business.DAL  ——-Model层，负责跟数据库交互</p>
+<p>application.Business.Request  ——–请求入参处理类</p>
+<p>application.Business.Response  ———返回数据处理类</p>
+<h3 id="Step3-代码实例"><a href="#Step3-代码实例" class="headerlink" title="Step3.代码实例"></a>Step3.代码实例</h3><p>我们以一个实例来解释代码逻辑处理的过程。</p>
+<h4 id="1-接口代码"><a href="#1-接口代码" class="headerlink" title="1.接口代码"></a>1.接口代码</h4><figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">WebMethod(Description = <span class="string">&quot;号源信息查询&quot;</span>)</span>]</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="built_in">string</span> <span class="title">getRegInfo</span>(<span class="params"><span class="built_in">string</span> xml</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">string</span> response = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    Business.Clinic.clinicBusiness.getClinicSource(xml,<span class="keyword">ref</span> response);</span><br><span class="line">    <span class="keyword">return</span> response;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>注释：ref是对实例的引用，类似指针的作用。</p>
+<h4 id="1-数据处理类"><a href="#1-数据处理类" class="headerlink" title="1.数据处理类"></a>1.数据处理类</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"> #region [ 号源信息 ]</span><br><span class="line">public static void getClinicSource(string requestXml, ref string response)</span><br><span class="line">&#123;</span><br><span class="line">    XmlHelper&lt;Request.Clinic.getClinicSourceRequest&gt; requestHelper = new XmlHelper&lt;Request.Clinic.getClinicSourceRequest&gt;();</span><br><span class="line">    XmlHelper&lt;Response.Clinic.getClinicSourceResponse&gt; responseHelper = new XmlHelper&lt;Response.Clinic.getClinicSourceResponse&gt;();</span><br><span class="line"></span><br><span class="line">    Response.Clinic.getClinicSourceResponse br = new Response.Clinic.getClinicSourceResponse();</span><br><span class="line">    br.clinicSourceResult = new Response.Clinic.clinicSourceResult();</span><br><span class="line">    br.clinicSourceResult.clinicSourceCollection = new List&lt;Response.Clinic.clinicSourceCollection&gt;();</span><br><span class="line"></span><br><span class="line">    //每天号源</span><br><span class="line">    Dictionary&lt;string, List&lt;YY_SG_WebService.Business.Response.Clinic.clinicSourceItem&gt;&gt; scheduleDateDic = new Dictionary&lt;string, List&lt;Response.Clinic.clinicSourceItem&gt;&gt;();</span><br><span class="line"></span><br><span class="line">    var request = requestHelper.Deserialize(requestXml);</span><br><span class="line">    if (request != null)</span><br><span class="line">    &#123;</span><br><span class="line">        BLL.Clinic.clinicBLL bll = new BLL.Clinic.clinicBLL();</span><br><span class="line">        bool isError = false;</span><br><span class="line">        string ErrorMessage = &quot;&quot;;</span><br><span class="line">        string resultCode = &quot;&quot;;</span><br><span class="line">        var ds = bll.getClinicSource(request.clinicSource.branchCode, request.clinicSource.beginDate, request.clinicSource.endDate, request.clinicSource.deptCode, request.clinicSource.doctorCode, ref isError, ref ErrorMessage,ref resultCode);</span><br><span class="line">        bool isData = true;</span><br><span class="line">        //判断是否返回数据</span><br><span class="line">        if (ds.Tables[0].Columns.Contains(&quot;resultMessage&quot;))</span><br><span class="line">        &#123;</span><br><span class="line">            isData = false;</span><br><span class="line">        &#125;</span><br><span class="line">        if (ds.Tables.Count &gt; 0 &amp;&amp; isData)</span><br><span class="line">        &#123;</span><br><span class="line">            for (int i = 0; i &lt; ds.Tables[0].Rows.Count; i++)</span><br><span class="line">            &#123;</span><br><span class="line">                var dr = ds.Tables[0].Rows[i];</span><br><span class="line">                var date = dr[&quot;scheduleDates&quot;].ToString();</span><br><span class="line">                YY_SG_WebService.Business.Response.Clinic.clinicSourceItem item = null;</span><br><span class="line"></span><br><span class="line">                if (scheduleDateDic.ContainsKey(date))</span><br><span class="line">                &#123;</span><br><span class="line">                    //在字典里面查找号源</span><br><span class="line">                    item = scheduleDateDic[date].FirstOrDefault(d =&gt; d.doctorNo == dr[&quot;doctorNo&quot;].ToString());</span><br><span class="line">                    if (item == null)</span><br><span class="line">                    &#123;</span><br><span class="line">                        item = new Response.Clinic.clinicSourceItem();</span><br><span class="line">                        item.category = dr[&quot;category&quot;].ToString();</span><br><span class="line">                        item.deptCode = dr[&quot;deptCode&quot;].ToString();</span><br><span class="line">                        item.deptName = dr[&quot;deptName&quot;].ToString();</span><br><span class="line">                        item.doctorCode = dr[&quot;doctorNo&quot;].ToString();</span><br><span class="line">                        item.doctorNo = dr[&quot;doctorNo&quot;].ToString();</span><br><span class="line">                        item.doctorName = dr[&quot;doctorName&quot;].ToString();</span><br><span class="line">                        item.doctorSex = dr[&quot;doctorSex&quot;].ToString();</span><br><span class="line">                        item.doctorTelephone = dr[&quot;doctorTelephone&quot;].ToString();</span><br><span class="line">                        item.doctorSkill = dr[&quot;doctorSkill&quot;].ToString();</span><br><span class="line">                        item.doctorIntroduction = dr[&quot;doctorIntroduction&quot;].ToString();</span><br><span class="line">                        item.doctorTitle = dr[&quot;doctorTitle&quot;].ToString();</span><br><span class="line">                        item.picture = dr[&quot;picture&quot;].ToString();</span><br><span class="line">                        item.leftTotalNum = dr[&quot;leftTotalNum&quot;].ToString();</span><br><span class="line">                        item.clinicSourceDetail = new List&lt;Response.Clinic.clinicSourceDetail&gt;();</span><br><span class="line">                        scheduleDateDic[date].Add(item);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                else</span><br><span class="line">                &#123;</span><br><span class="line">                    item = new Response.Clinic.clinicSourceItem();</span><br><span class="line">                    item.category = dr[&quot;category&quot;].ToString();</span><br><span class="line">                    item.deptCode = dr[&quot;deptCode&quot;].ToString();</span><br><span class="line">                    item.deptName = dr[&quot;deptName&quot;].ToString();</span><br><span class="line">                    item.doctorCode = dr[&quot;doctorNo&quot;].ToString();</span><br><span class="line">                    item.doctorNo = dr[&quot;doctorNo&quot;].ToString();</span><br><span class="line">                    item.doctorName = dr[&quot;doctorName&quot;].ToString();</span><br><span class="line">                    item.doctorSex = dr[&quot;doctorSex&quot;].ToString();</span><br><span class="line">                    item.doctorTelephone = dr[&quot;doctorTelephone&quot;].ToString();</span><br><span class="line">                    item.doctorSkill = dr[&quot;doctorSkill&quot;].ToString();</span><br><span class="line">                    item.doctorIntroduction = dr[&quot;doctorIntroduction&quot;].ToString();</span><br><span class="line">                    item.doctorTitle = dr[&quot;doctorTitle&quot;].ToString();</span><br><span class="line">                    item.picture = dr[&quot;picture&quot;].ToString();</span><br><span class="line">                    item.leftTotalNum = dr[&quot;leftTotalNum&quot;].ToString();</span><br><span class="line"></span><br><span class="line">                    item.clinicSourceDetail = new List&lt;Response.Clinic.clinicSourceDetail&gt;();</span><br><span class="line"></span><br><span class="line">                    scheduleDateDic.Add(date, new List&lt;Response.Clinic.clinicSourceItem&gt; &#123; item &#125;);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                var detail = item.clinicSourceDetail.FirstOrDefault(d =&gt; d.timeFlag == dr[&quot;timeFlags&quot;].ToString());</span><br><span class="line">                //时间段不存在,添加时间段</span><br><span class="line">                if (detail == null)</span><br><span class="line">                &#123;</span><br><span class="line">                    detail = new Response.Clinic.clinicSourceDetail();                          </span><br><span class="line">                    detail.timeFlag = dr[&quot;timeFlags&quot;].ToString();         </span><br><span class="line">                    detail.hasDetailTime = &quot;1&quot;;</span><br><span class="line">                    detail.beginTime = dr[&quot;beginTime&quot;].ToString();</span><br><span class="line">                    detail.endTime = dr[&quot;endTime&quot;].ToString();</span><br><span class="line">                    detail.workStatus = &quot;1&quot;;</span><br><span class="line">                    detail.totalNum = dr[&quot;totalNum&quot;].ToString();</span><br><span class="line">                    detail.leftNum = dr[&quot;leftTotalNum&quot;].ToString();</span><br><span class="line">                    detail.regFee = dr[&quot;regFee&quot;].ToString();</span><br><span class="line">                    detail.treatFee = dr[&quot;treatFee&quot;].ToString();</span><br><span class="line">                    detail.workId = &quot;&quot;;</span><br><span class="line">                    item.clinicSourceDetail.Add(detail);</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">            foreach (var date in scheduleDateDic.Keys)</span><br><span class="line">            &#123;</span><br><span class="line">                Response.Clinic.clinicSourceCollection item = new Response.Clinic.clinicSourceCollection();</span><br><span class="line">                item.scheduleDate = date;</span><br><span class="line">                item.clinicSourceItem = scheduleDateDic[date];</span><br><span class="line"></span><br><span class="line">                br.clinicSourceResult.clinicSourceCollection.Add(item);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            br.resultCode = resultCode;</span><br><span class="line">            br.resultMessage =ds.Tables[0].Rows[0][&quot;resultMessage&quot;].ToString();</span><br><span class="line">        &#125;</span><br><span class="line">        br.resultCode = resultCode;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        br.resultCode = &quot;-1&quot;;</span><br><span class="line">        br.resultMessage = &quot;传入参数不正确或者为空&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    response = responseHelper.Serialize(br);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面最开始我们用到了泛型类，生成了两个实例类，这两个类是根据入参出参构造出来的。</p>
+<h5 id="入参类"><a href="#入参类" class="headerlink" title="入参类"></a>入参类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using System.Linq;</span><br><span class="line">using System.Text;</span><br><span class="line">using System.Xml.Serialization;</span><br><span class="line">namespace YY_SG_WebService.Business.Request.Clinic</span><br><span class="line">&#123;</span><br><span class="line">    [XmlRoot(ElementName = &quot;request&quot;)]</span><br><span class="line">    [Serializable]</span><br><span class="line">    public class getClinicSourceRequest : BaseRequest</span><br><span class="line">    &#123;</span><br><span class="line">        [XmlElement(&quot;params&quot;)]</span><br><span class="line">        public clinicSource clinicSource &#123; get; set; &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    public class clinicSource</span><br><span class="line">    &#123;</span><br><span class="line">        public string branchCode &#123; get; set; &#125;</span><br><span class="line">        public string beginDate &#123; get; set; &#125;</span><br><span class="line">        public string endDate &#123; get; set; &#125;</span><br><span class="line">        public string deptCode &#123; get; set; &#125;</span><br><span class="line">        public string doctorCode &#123; get; set; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="出参类"><a href="#出参类" class="headerlink" title="出参类"></a>出参类</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Collections.Generic;</span><br><span class="line">using System.Linq;</span><br><span class="line">using System.Text;</span><br><span class="line">using System.Xml.Serialization;</span><br><span class="line">namespace YY_SG_WebService.Business.Response.Clinic</span><br><span class="line">&#123;</span><br><span class="line">    [XmlRoot(ElementName = &quot;response&quot;)]</span><br><span class="line">    [Serializable]</span><br><span class="line">    public class getClinicSourceResponse:BaseResponse</span><br><span class="line">    &#123;</span><br><span class="line">        [XmlElement(&quot;result&quot;)]</span><br><span class="line">        public clinicSourceResult clinicSourceResult &#123; get; set; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public class clinicSourceResult</span><br><span class="line">    &#123;</span><br><span class="line">        [XmlElement(&quot;collection&quot;)]</span><br><span class="line">        public List&lt;clinicSourceCollection&gt; clinicSourceCollection &#123; get; set; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public class clinicSourceCollection</span><br><span class="line">    &#123;</span><br><span class="line">        public string  scheduleDate &#123; get; set; &#125;</span><br><span class="line">        [XmlElement(&quot;item&quot;)]</span><br><span class="line">        public List&lt;clinicSourceItem&gt; clinicSourceItem &#123; get; set; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public class clinicSourceItem</span><br><span class="line">    &#123;</span><br><span class="line">        public string category &#123; get; set; &#125;</span><br><span class="line">        public string deptCode &#123; get; set; &#125;</span><br><span class="line">        public string deptName &#123; get; set; &#125;</span><br><span class="line">        public string doctorCode &#123; get; set; &#125;</span><br><span class="line">        public string doctorNo &#123; get; set; &#125;</span><br><span class="line">        public string doctorName &#123; get; set; &#125;</span><br><span class="line">        public string doctorSex &#123; get; set; &#125;</span><br><span class="line">        public string doctorTelephone &#123; get; set; &#125;</span><br><span class="line">        public string doctorSkill &#123; get; set; &#125;</span><br><span class="line">        public string doctorIntroduction &#123; get; set; &#125;</span><br><span class="line">        public string doctorTitle &#123; get; set; &#125;</span><br><span class="line">        public string picture &#123; get; set; &#125;</span><br><span class="line">        public string leftTotalNum &#123; get; set; &#125;</span><br><span class="line">        [XmlElement(&quot;detail&quot;)]</span><br><span class="line">        public List&lt;clinicSourceDetail&gt; clinicSourceDetail &#123; get; set; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public class clinicSourceDetail</span><br><span class="line">    &#123;</span><br><span class="line">        public string timeFlag &#123; get; set; &#125;</span><br><span class="line">        public string hasDetailTime &#123; get; set; &#125;</span><br><span class="line">        public string  beginTime &#123; get; set; &#125;</span><br><span class="line">        public string endTime &#123; get; set; &#125;</span><br><span class="line">        public string workStatus &#123; get; set; &#125;</span><br><span class="line">        public string totalNum &#123; get; set; &#125;</span><br><span class="line">        public string leftNum &#123; get; set; &#125;</span><br><span class="line">        public string regFee &#123; get; set; &#125;</span><br><span class="line">        public string treatFee &#123; get; set; &#125;</span><br><span class="line">        public string workId &#123; get; set; &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面是我实际的业务构造的类，比较复杂，看实际情况构造，这里涉及到了C#的xml相关知识，具体可百度了解。</p>
+<p>我们看到上面的数据处理类，关注的重点是 **bll.getClinicSource()**方法，由这个方法调用我们跟数据库交互的方法，然后返回DataSet（该数据为接口返回的业务数据），后面是对返回的业务数据根据约定的格式进行处理封装，responseHelper.Serialize这个方法是将返回业务数据类反序列化为xml格式字符串。其中由于返回的数据格式较为复杂，有四个层级，使用了Dictionary进行存储分类，再赋值给实例类。</p>
+<h4 id="数据库交互类"><a href="#数据库交互类" class="headerlink" title="数据库交互类"></a>数据库交互类</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">public DataSet getClinicSource(string branchCode, string  beginDate, string  endDate, string deptCode, string doctorCode, ref bool isError, ref string ErrorMessage,ref string resultCode)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;OracleParameter&gt; paramList = new List&lt;OracleParameter&gt;();</span><br><span class="line">            paramList.Add(DBHelper.createParameter(&quot;branchCode&quot;, 30, ParameterDirection.Input, branchCode));</span><br><span class="line">            paramList.Add(DBHelper.createParameter(&quot;beginDate&quot;, 30, ParameterDirection.Input, beginDate));</span><br><span class="line">            paramList.Add(DBHelper.createParameter(&quot;endDate&quot;, 30, ParameterDirection.Input, endDate));</span><br><span class="line">            paramList.Add(DBHelper.createParameter(&quot;deptCode&quot;, 30, ParameterDirection.Input,deptCode));</span><br><span class="line">            paramList.Add(DBHelper.createParameter(&quot;doctorCode&quot;, 30, ParameterDirection.Input, doctorCode));</span><br><span class="line">            paramList.Add(DBHelper.createParameter(&quot;curout&quot;, ParameterDirection.Output, OracleType.Cursor));</span><br><span class="line">            paramList.AddRange(DBHelper.CreateBaseParameter());</span><br><span class="line">            OracleParameter[] pm = paramList.ToArray();</span><br><span class="line">            DataSet ds = new DataSet();</span><br><span class="line">            try</span><br><span class="line">            &#123;</span><br><span class="line">                ds = DBHelper.runProc_Ret_DataSet(&quot;proc_clinic_Info&quot;, ref pm);</span><br><span class="line">                foreach (var op in pm)</span><br><span class="line">                &#123;</span><br><span class="line">                    if (op.ParameterName == &quot;resultMessage&quot;)</span><br><span class="line">                    &#123;</span><br><span class="line">                        ErrorMessage = op.Value.ToString();</span><br><span class="line">                    &#125;</span><br><span class="line">                    if (op.ParameterName == &quot;resultCode&quot;)</span><br><span class="line">                    &#123;</span><br><span class="line">                        resultCode = op.Value.ToString();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                isError = false;</span><br><span class="line">            &#125;</span><br><span class="line">            catch (Exception e)</span><br><span class="line">            &#123;</span><br><span class="line">                isError = true;</span><br><span class="line">                ErrorMessage = e.Message;</span><br><span class="line">                TJYD.Helper.Logger.Write(&quot;proc_clinic_Info,&quot; + e.Message);</span><br><span class="line">            &#125;</span><br><span class="line">            return ds;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>DBHelper.runProc_Ret_DataSet</strong>该方法是调用数据库的存储过程，第一个参数是存储过程名称，第二个是存储过程入参，返回DataSet。</p>
+<p><strong>思绪有点凌乱，先写到这吧，有些东西想说清楚，但是又没法整理好逻辑关系，头疼（—）</strong></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/C/" rel="tag"># C#</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2017/10/24/Oracle%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" rel="prev" title="Oracle定时任务">
+      <i class="fa fa-chevron-left"></i> Oracle定时任务
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2018/02/01/Oracle%E6%95%B0%E6%8D%AE%E5%BA%93%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81MD5%E5%8A%A0%E5%AF%86/" rel="next" title="Oracle数据库用户密码MD5加密">
+      Oracle数据库用户密码MD5加密 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Step1-%E5%88%9B%E5%BB%BAWebService%E9%A1%B9%E7%9B%AE"><span class="nav-number">1.</span> <span class="nav-text">Step1.创建WebService项目</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E6%9E%90"><span class="nav-number">1.1.</span> <span class="nav-text">代码解析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step2-%E9%A1%B9%E7%9B%AE%E4%BB%A3%E7%A0%81%E7%9A%84%E7%BB%93%E6%9E%84"><span class="nav-number">2.</span> <span class="nav-text">Step2.项目代码的结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Step3-%E4%BB%A3%E7%A0%81%E5%AE%9E%E4%BE%8B"><span class="nav-number">3.</span> <span class="nav-text">Step3.代码实例</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%8E%A5%E5%8F%A3%E4%BB%A3%E7%A0%81"><span class="nav-number">3.1.</span> <span class="nav-text">1.接口代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E7%B1%BB"><span class="nav-number">3.2.</span> <span class="nav-text">1.数据处理类</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%85%A5%E5%8F%82%E7%B1%BB"><span class="nav-number">3.2.1.</span> <span class="nav-text">入参类</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%87%BA%E5%8F%82%E7%B1%BB"><span class="nav-number">3.2.2.</span> <span class="nav-text">出参类</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%A4%E4%BA%92%E7%B1%BB"><span class="nav-number">3.3.</span> <span class="nav-text">数据库交互类</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="swordsTnT"
+      src="/uploads/avatar.jpg">
+  <p class="site-author-name" itemprop="name">swordsTnT</p>
+  <div class="site-description" itemprop="description">努力是为了 站在万人中央 成为别人的光</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">swordsTnT</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
